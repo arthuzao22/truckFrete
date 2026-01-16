@@ -69,7 +69,7 @@ export async function PATCH(
       data: {
         status: validacao.data.status,
         motivoRecusa: validacao.data.motivoRecusa,
-        respondidoEm: validacao.data.status !== "PENDENTE" ? new Date() : undefined
+        respondidoEm: new Date()
       },
       include: {
         anuncio: {

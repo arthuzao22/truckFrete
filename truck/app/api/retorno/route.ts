@@ -31,34 +31,25 @@ export async function GET(request: Request) {
         take: limit,
         include: { 
           veiculo: {
-            include: {
-              implementos: true,
-              usuario: {
-                select: {
-                  id: true,
-                  nome: true,
-                  telefone: true
-                }
-              }
-            }
-          },
-          implemento: true,
-          motorista: {
             select: {
               id: true,
-              nome: true,
-              telefone: true
+              marca: true,
+              modelo: true,
+              placa: true
             }
           },
-          interesses: {
-            include: {
-              contratante: {
-                select: {
-                  id: true,
-                  nome: true,
-                  telefone: true
-                }
-              }
+          implemento: {
+            select: {
+              id: true,
+              tipoAplicacao: true,
+              tipoEstrutura: true,
+              placa: true,
+              capacidadePeso: true
+            }
+          },
+          _count: {
+            select: {
+              interesses: true
             }
           }
         },
