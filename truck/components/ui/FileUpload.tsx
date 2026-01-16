@@ -39,12 +39,14 @@ export function FileUpload({
 }: FileUploadProps) {
   const [files, setFiles] = useState<UploadedFile[]>([])
   const [isDragging, setIsDragging] = useState(false)
+  const [errors, setErrors] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return
 
     const newFiles: UploadedFile[] = []
+    const newErrors: string[] = []
 
     // Validar e processar arquivos
     for (let i = 0; i < fileList.length; i++) {
@@ -57,13 +59,13 @@ export function FileUpload({
 
       // Validar tipo
       if (!ACCEPTED_TYPES.includes(file.type)) {
-        alert(`Arquivo ${file.name} não é uma imagem válida`)
+        newErrors.push(`Arquivo ${file.name} não é uma imagem válida`)
         continue
       }
 
       // Validar tamanho
       if (file.size > maxSize) {
-        alert(`Arquivo ${file.name} excede o tamanho máximo de ${maxSize / 1024 / 1024}MB`)
+        newErrors.push(`Arquivo ${file.name} excede o tamanho máximo de ${maxSize / 1024 / 1024}MB`)
         continue
       }
 
@@ -78,6 +80,7 @@ export function FileUpload({
       })
     }
 
+    setErrors(newErrors)
     const updatedFiles = [...files, ...newFiles]
     setFiles(updatedFiles)
 
@@ -198,6 +201,15 @@ export function FileUpload({
 
   return (
     <div className={className}>
+      {/* Error Messages */}
+      {errors.length > 0 && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          {errors.map((error, i) => (
+            <p key={i} className="text-sm text-red-600">{error}</p>
+          ))}
+        </div>
+      )}
+
       {/* Drop Zone */}
       <motion.div
         onClick={handleClick}

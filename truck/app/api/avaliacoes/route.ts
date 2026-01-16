@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
       data: {
         tipo: "SISTEMA",
         titulo: "Nova avaliação recebida",
-        mensagem: `${session.user.name} avaliou você com ${avaliacao.nota} estrelas`,
+        mensagem: `${session.user.nome || "Um usuário"} avaliou você com ${avaliacao.nota} estrelas`,
         link: `/perfil`,
         usuarioId: avaliadoId,
       },

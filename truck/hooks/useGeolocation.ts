@@ -25,7 +25,7 @@ interface UseGeolocationOptions {
 
 interface UseGeolocationReturn {
   position: GeoPosition | null
-  error: GeolocationPositionError | null
+  error: GeolocationPositionError | string | null
   loading: boolean
   supported: boolean
   getCurrentPosition: () => void
