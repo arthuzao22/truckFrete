@@ -12,7 +12,7 @@ export default async function FretesPage() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">
-        {(session.user as any).role === "CONTRATANTE" ? "Meus Fretes" : "Fretes Disponíveis"}
+        {session.user.role === "CONTRATANTE" ? "Meus Fretes" : "Fretes Disponíveis"}
       </h1>
       <FretesList />
     </div>

@@ -29,7 +29,7 @@ export function FretesList() {
   const [fretes, setFretes] = useState<Frete[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
-  const role = (session?.user as any)?.role
+  const role = session?.user?.role
 
   async function loadFretes() {
     try {

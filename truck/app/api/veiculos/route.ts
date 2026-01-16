@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const [veiculos, total] = await Promise.all([
       prisma.veiculo.findMany({
         where: { 
-          usuarioId: (session.user as any).id,
+          usuarioId: session.user.id,
           ativo: true 
         },
         skip: (page - 1) * limit,
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       }),
       prisma.veiculo.count({ 
         where: { 
-          usuarioId: (session.user as any).id,
+          usuarioId: session.user.id,
           ativo: true 
         } 
       })
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
     const veiculo = await prisma.veiculo.create({
       data: { 
         ...validacao.data, 
-        usuarioId: (session.user as any).id 
+        usuarioId: session.user.id 
       },
       include: { implementos: true }
     })

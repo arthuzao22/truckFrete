@@ -7,7 +7,7 @@ import { signOut, useSession } from "next-auth/react"
 export function DashboardNav() {
   const pathname = usePathname()
   const { data: session } = useSession()
-  const role = (session?.user as any)?.role
+  const role = session?.user?.role
 
   const isActive = (path: string) => pathname.startsWith(path)
 

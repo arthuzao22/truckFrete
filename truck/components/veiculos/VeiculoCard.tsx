@@ -80,7 +80,7 @@ export function VeiculoCard({ veiculo, onAddImplemento, onRefresh }: VeiculoCard
       }
 
       onRefresh()
-    } catch (err) {
+    } catch {
       alert("Erro ao excluir implemento. Tente novamente.")
     } finally {
       setDeletingId(null)

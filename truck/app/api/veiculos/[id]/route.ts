@@ -19,7 +19,7 @@ export async function DELETE(
     const veiculo = await prisma.veiculo.findFirst({
       where: {
         id,
-        usuarioId: (session.user as any).id
+        usuarioId: session.user.id
       }
     })
 
@@ -66,7 +66,7 @@ export async function GET(
       where: {
         id,
         ativo: true,
-        usuarioId: (session.user as any).id
+        usuarioId: session.user.id
       },
       include: {
         implementos: {

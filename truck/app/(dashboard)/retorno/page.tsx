@@ -9,7 +9,7 @@ export default async function RetornoPage() {
     redirect("/login")
   }
 
-  const role = (session.user as any).role
+  const role = session.user.role
   
   if (role !== "MOTORISTA") {
     redirect("/dashboard")

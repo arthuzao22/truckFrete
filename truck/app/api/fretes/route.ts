@@ -14,10 +14,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get("page") || "1")
     const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 100)
-    const userRole = (session.user as any).role
-    const userId = (session.user as any).id
+    const userRole = session.user.role
+    const userId = session.user.id
 
-    let where: any = {}
+    const where: Record<string, unknown> = {}
 
     // Contratantes veem apenas seus fretes
     if (userRole === "CONTRATANTE") {
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
     }
 
-    const userRole = (session.user as any).role
+    const userRole = session.user.role
     if (userRole !== "CONTRATANTE") {
       return NextResponse.json(
         { error: "Apenas contratantes podem criar fretes" },
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
     const frete = await prisma.frete.create({
       data: { 
         ...validacao.data, 
-        contratanteId: (session.user as any).id 
+        contratanteId: session.user.id 
       },
       include: {
         contratante: {

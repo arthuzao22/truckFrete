@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     // Verificar permissão
-    const userId = (session.user as any).id
+    const userId = session.user.id
     if (frete.contratanteId !== userId) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
       where: { id: freteId }
     })
 
-    if (!frete || frete.contratanteId !== (session.user as any).id) {
+    if (!frete || frete.contratanteId !== session.user.id) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
 

@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     const veiculo = await prisma.veiculo.findFirst({
       where: {
         id: veiculoId,
-        usuarioId: (session.user as any).id
+        usuarioId: session.user.id
       }
     })
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     const veiculo = await prisma.veiculo.findFirst({
       where: {
         id: validacao.data.veiculoId,
-        usuarioId: (session.user as any).id
+        usuarioId: session.user.id
       }
     })
 

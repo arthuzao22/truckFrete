@@ -14,10 +14,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get("page") || "1")
     const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 100)
-    const userRole = (session.user as any).role
-    const userId = (session.user as any).id
+    const userRole = session.user.role
+    const userId = session.user.id
 
-    let where: any = { ativo: true }
+    const where: Record<string, unknown> = { ativo: true }
 
     // Motoristas veem apenas seus próprios anúncios
     if (userRole === "MOTORISTA") {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
     }
 
-    const userRole = (session.user as any).role
+    const userRole = session.user.role
     if (userRole !== "MOTORISTA") {
       return NextResponse.json(
         { error: "Apenas motoristas podem criar anúncios de retorno" },
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
     const veiculo = await prisma.veiculo.findFirst({
       where: {
         id: validacao.data.veiculoId,
-        usuarioId: (session.user as any).id
+        usuarioId: session.user.id
       }
     })
 

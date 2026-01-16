@@ -9,10 +9,17 @@ interface RetornoFormModalProps {
   onSuccess: () => void
 }
 
+interface Veiculo {
+  id: string
+  marca: string
+  modelo: string
+  placa: string
+}
+
 export function RetornoFormModal({ onClose, onSuccess }: RetornoFormModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [veiculos, setVeiculos] = useState<any[]>([])
+  const [veiculos, setVeiculos] = useState<Veiculo[]>([])
 
   useEffect(() => {
     async function loadVeiculos() {
@@ -57,7 +64,7 @@ export function RetornoFormModal({ onClose, onSuccess }: RetornoFormModalProps) 
       } else {
         onSuccess()
       }
-    } catch (err) {
+    } catch {
       setError("Erro ao criar anúncio")
     } finally {
       setLoading(false)

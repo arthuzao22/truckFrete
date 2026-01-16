@@ -13,9 +13,9 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const freteId = searchParams.get("freteId")
-    const userId = (session.user as any).id
+    const userId = session.user.id
 
-    let where: any = {
+    const where: Record<string, unknown> = {
       OR: [
         { remetenteId: userId },
         { destinatarioId: userId }
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Frete não encontrado" }, { status: 404 })
       }
 
-      const userId = (session.user as any).id
+      const userId = session.user.id
       const isContratante = frete.contratanteId === userId
       const isMotorista = frete.motoristaId === userId
 
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
     const mensagem = await prisma.mensagem.create({
       data: {
         conteudo,
-        remetenteId: (session.user as any).id,
+        remetenteId: session.user.id,
         destinatarioId,
         freteId
       },

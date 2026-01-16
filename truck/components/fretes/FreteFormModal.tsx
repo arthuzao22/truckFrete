@@ -49,7 +49,7 @@ export function FreteFormModal({ onClose, onSuccess }: FreteFormModalProps) {
       } else {
         onSuccess()
       }
-    } catch (err) {
+    } catch {
       setError("Erro ao publicar frete")
     } finally {
       setLoading(false)

@@ -5,6 +5,12 @@ import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { RetornoFormModal } from "./RetornoFormModal"
 
+interface Implemento {
+  id: string
+  tipoEstrutura: string
+  tipoAplicacao: string
+}
+
 interface Anuncio {
   id: string
   origemCidade: string
@@ -19,7 +25,7 @@ interface Anuncio {
     marca: string
     modelo: string
     placa: string
-    implementos: any[]
+    implementos: Implemento[]
   }
 }
 

@@ -4,6 +4,13 @@ import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 
+interface Implemento {
+  id: string
+  tipoEstrutura: string
+  tipoAplicacao: string
+  capacidadePeso: number
+}
+
 interface Match {
   score: number
   detalhes: {
@@ -28,13 +35,24 @@ interface Match {
         nome: string
         telefone: string
       }
-      implementos: any[]
+      implementos: Implemento[]
     }
   }
 }
 
+interface Frete {
+  id: string
+  status: string
+  origemCidade: string
+  origemUf: string
+  destinoCidade: string
+  destinoUf: string
+  tipoCarga: string
+  peso: number
+}
+
 export function MatchesList() {
-  const [fretes, setFretes] = useState<any[]>([])
+  const [fretes, setFretes] = useState<Frete[]>([])
   const [freteSelected, setFreteSelected] = useState<string>("")
   const [matches, setMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(false)
@@ -44,7 +62,7 @@ export function MatchesList() {
       try {
         const res = await fetch("/api/fretes")
         const data = await res.json()
-        const fretesAbertos = (data.data || []).filter((f: any) => f.status === "ABERTO")
+        const fretesAbertos = (data.data || []).filter((f: Frete) => f.status === "ABERTO")
         setFretes(fretesAbertos)
       } catch (error) {
         console.error("Erro ao carregar fretes:", error)

@@ -73,7 +73,7 @@ export function ChatList() {
     }
   }
 
-  const userId = (session?.user as any)?.id
+  const userId = session?.user?.id
 
   // Agrupar conversas por pessoa
   const conversas = new Map<string, Mensagem[]>()

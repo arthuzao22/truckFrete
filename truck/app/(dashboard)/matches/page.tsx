@@ -9,7 +9,7 @@ export default async function MatchesPage() {
     redirect("/login")
   }
 
-  const role = (session.user as any).role
+  const role = session.user.role
   
   if (role !== "CONTRATANTE") {
     redirect("/dashboard")

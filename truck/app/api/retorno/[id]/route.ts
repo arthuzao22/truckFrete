@@ -25,7 +25,7 @@ export async function DELETE(
     }
 
     // Verificar se o veículo pertence ao usuário
-    if (anuncio.veiculo.usuarioId !== (session.user as any).id) {
+    if (anuncio.veiculo.usuarioId !== session.user.id) {
       return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
     }
 

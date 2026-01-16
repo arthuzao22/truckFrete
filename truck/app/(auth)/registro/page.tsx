@@ -41,7 +41,7 @@ export default function RegistroPage() {
       } else {
         router.push("/login?registered=true")
       }
-    } catch (err) {
+    } catch {
       setError("Erro ao criar conta")
     } finally {
       setLoading(false)
