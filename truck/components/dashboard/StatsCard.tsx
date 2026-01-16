@@ -1,7 +1,6 @@
 // FreteConnect 2.0 - Stats Card Component
 "use client"
 
-import { motion } from "framer-motion"
 import { LucideIcon } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"

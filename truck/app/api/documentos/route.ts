@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { z } from "zod"
+import { TipoDocumento, StatusDocumento } from "@prisma/client"
 
 const documentoSchema = z.object({
   tipo: z.enum([
@@ -28,10 +29,14 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url)
-    const tipo = searchParams.get("tipo")
-    const status = searchParams.get("status")
+    const tipo = searchParams.get("tipo") as TipoDocumento | null
+    const status = searchParams.get("status") as StatusDocumento | null
 
-    const where: any = {
+    const where: {
+      usuarioId: string
+      tipo?: TipoDocumento
+      status?: StatusDocumento
+    } = {
       usuarioId: session.user.id,
     }
 

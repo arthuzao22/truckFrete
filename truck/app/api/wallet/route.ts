@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
 // GET - Obter saldo da wallet
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const session = await auth()
     if (!session?.user?.id) {

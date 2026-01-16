@@ -68,7 +68,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
         whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
-        {...(props as any)}
+        {...(props as React.ComponentProps<typeof motion.button>)}
       >
         {loading ? (
           <>
