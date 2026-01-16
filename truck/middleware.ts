@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
 const protectedRoutes = [
   "/dashboard",
@@ -13,29 +13,34 @@ const protectedRoutes = [
 
 const authRoutes = ["/login", "/registro"]
 
-export default auth((req) => {
-  const { nextUrl } = req
-  const isLoggedIn = !!req.auth
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
 
-  const isProtected = protectedRoutes.some(route => 
-    nextUrl.pathname.startsWith(route)
+  // Check if user has a session token
+  const sessionToken = request.cookies.get("authjs.session-token")?.value ||
+    request.cookies.get("__Secure-authjs.session-token")?.value
+
+  const isLoggedIn = !!sessionToken
+
+  const isProtected = protectedRoutes.some(route =>
+    pathname.startsWith(route)
   )
-  const isAuthRoute = authRoutes.some(route => 
-    nextUrl.pathname.startsWith(route)
+  const isAuthRoute = authRoutes.some(route =>
+    pathname.startsWith(route)
   )
 
-  // Redirecionar não autenticados de rotas protegidas
+  // Redirect unauthenticated users from protected routes
   if (isProtected && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", nextUrl))
+    return NextResponse.redirect(new URL("/login", request.url))
   }
 
-  // Redirecionar autenticados das rotas de auth
+  // Redirect authenticated users from auth routes
   if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl))
+    return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"]
