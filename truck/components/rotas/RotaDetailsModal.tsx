@@ -85,8 +85,10 @@ export function RotaDetailsModal({ rotaId, onClose }: RotaDetailsModalProps) {
   }
 
   function handleContact() {
-    // Redirect to login if not authenticated
-    router.push(`/login?redirect=/rotas/${rotaId}`)
+    // Redirect to login if not authenticated with safe URL encoding
+    const redirectUrl = `/rotas/${encodeURIComponent(rotaId)}`
+    const loginUrl = `/login?${new URLSearchParams({ redirect: redirectUrl }).toString()}`
+    router.push(loginUrl)
   }
 
   if (loading) {

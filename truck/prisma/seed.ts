@@ -235,12 +235,16 @@ async function main() {
 
     console.log(`✅ ${4} implementos criados`)
 
-    // Buscar implementos criados
+    // Buscar implementos criados com verificação
     const implementos = await prisma.implemento.findMany()
-    const implemento1 = implementos.find(i => i.placa === 'IMP-0001')!
-    const implemento2 = implementos.find(i => i.placa === 'IMP-0002')!
-    const implemento3 = implementos.find(i => i.placa === 'IMP-0003')!
-    const implemento4 = implementos.find(i => i.placa === 'IMP-0004')!
+    const implemento1 = implementos.find(i => i.placa === 'IMP-0001')
+    const implemento2 = implementos.find(i => i.placa === 'IMP-0002')
+    const implemento3 = implementos.find(i => i.placa === 'IMP-0003')
+    const implemento4 = implementos.find(i => i.placa === 'IMP-0004')
+
+    if (!implemento1 || !implemento2 || !implemento3 || !implemento4) {
+      throw new Error('Implementos não encontrados após criação')
+    }
 
     // =============================
     // CRIAR ANÚNCIOS DE RETORNO

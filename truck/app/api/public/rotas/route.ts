@@ -8,11 +8,11 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get("page") || "1")
     const limit = Math.min(parseInt(searchParams.get("limit") || "30"), 100)
     
-    // Filtros
-    const origemUf = searchParams.get("origemUf")
-    const origemCidade = searchParams.get("origemCidade")
-    const destinoUf = searchParams.get("destinoUf")
-    const destinoCidade = searchParams.get("destinoCidade")
+    // Filtros com sanitização
+    const origemUf = searchParams.get("origemUf")?.toUpperCase().slice(0, 2)
+    const origemCidade = searchParams.get("origemCidade")?.trim().slice(0, 100)
+    const destinoUf = searchParams.get("destinoUf")?.toUpperCase().slice(0, 2)
+    const destinoCidade = searchParams.get("destinoCidade")?.trim().slice(0, 100)
     const tipoImplemento = searchParams.get("tipoImplemento")
     const dataSaidaMin = searchParams.get("dataSaidaMin")
     const dataSaidaMax = searchParams.get("dataSaidaMax")
@@ -22,11 +22,15 @@ export async function GET(request: Request) {
       status: "ATIVO" // Apenas anúncios ativos
     }
 
-    // Aplicar filtros
-    if (origemUf) where.origemUf = origemUf
-    if (origemCidade) where.origemCidade = { contains: origemCidade, mode: "insensitive" }
-    if (destinoUf) where.destinoUf = destinoUf
-    if (destinoCidade) where.destinoCidade = { contains: destinoCidade, mode: "insensitive" }
+    // Aplicar filtros com validação
+    if (origemUf && /^[A-Z]{2}$/.test(origemUf)) where.origemUf = origemUf
+    if (origemCidade && origemCidade.length >= 2) {
+      where.origemCidade = { contains: origemCidade, mode: "insensitive" }
+    }
+    if (destinoUf && /^[A-Z]{2}$/.test(destinoUf)) where.destinoUf = destinoUf
+    if (destinoCidade && destinoCidade.length >= 2) {
+      where.destinoCidade = { contains: destinoCidade, mode: "insensitive" }
+    }
     
     if (dataSaidaMin || dataSaidaMax) {
       where.dataSaida = {}
