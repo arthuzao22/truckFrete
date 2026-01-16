@@ -21,9 +21,7 @@ export async function GET(request: Request) {
 
     // Motoristas veem apenas seus próprios anúncios
     if (userRole === "MOTORISTA") {
-      where.veiculo = {
-        usuarioId: userId
-      }
+      where.motoristaId = userId
     }
 
     const [anuncios, total] = await Promise.all([
@@ -33,19 +31,29 @@ export async function GET(request: Request) {
         take: limit,
         include: { 
           veiculo: {
-            include: {
-              implementos: true,
-              usuario: {
-                select: {
-                  id: true,
-                  nome: true,
-                  telefone: true
-                }
-              }
+            select: {
+              id: true,
+              marca: true,
+              modelo: true,
+              placa: true
+            }
+          },
+          implemento: {
+            select: {
+              id: true,
+              tipoAplicacao: true,
+              tipoEstrutura: true,
+              placa: true,
+              capacidadePeso: true
+            }
+          },
+          _count: {
+            select: {
+              interesses: true
             }
           }
         },
-        orderBy: { dataDisponivel: "asc" }
+        orderBy: { dataSaida: "asc" }
       }),
       prisma.anuncioRetorno.count({ where })
     ])
@@ -103,12 +111,35 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Veículo não encontrado" }, { status: 404 })
     }
 
+    // Verificar se o implemento pertence ao veículo
+    const implemento = await prisma.implemento.findFirst({
+      where: {
+        id: validacao.data.implementoId,
+        veiculoId: validacao.data.veiculoId
+      }
+    })
+
+    if (!implemento) {
+      return NextResponse.json({ error: "Implemento não encontrado para este veículo" }, { status: 404 })
+    }
+
     const anuncio = await prisma.anuncioRetorno.create({
-      data: validacao.data,
+      data: {
+        ...validacao.data,
+        motoristaId: session.user.id
+      },
       include: {
         veiculo: {
           include: {
             implementos: true
+          }
+        },
+        implemento: true,
+        motorista: {
+          select: {
+            id: true,
+            nome: true,
+            telefone: true
           }
         }
       }

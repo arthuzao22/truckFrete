@@ -28,8 +28,8 @@ interface AnuncioRetorno {
   origemUf: string
   destinoCidade: string
   destinoUf: string
-  dataDisponivel: Date
-  raioOperacao: number
+  dataSaida: Date
+  raioOperacao: number | null
   veiculo: {
     implementos: Array<{
       tipoAplicacao: string
@@ -96,8 +96,8 @@ function calcularRotaScore(frete: Frete, anuncio: AnuncioRetorno): number {
     anuncio.origemUf
   )
   
-  // Raio de operação do anúncio
-  const raio = anuncio.raioOperacao
+  // Raio de operação do anúncio (com valor padrão se null)
+  const raio = anuncio.raioOperacao || 500
   
   let score = 0
   
@@ -220,14 +220,14 @@ function calcularCapacidadeScore(frete: Frete, anuncio: AnuncioRetorno): number 
  * Calcula score de janela de tempo (0-15 pontos)
  */
 function calcularTempoScore(frete: Frete, anuncio: AnuncioRetorno): number {
-  const dataDisponivel = new Date(anuncio.dataDisponivel)
+  const dataSaida = new Date(anuncio.dataSaida)
   const prazoColeta = new Date(frete.prazoColeta)
   
   // TODO: Implement delivery date validation in future versions
   
   // Diferença em dias
   const diferenciaColeta = Math.floor(
-    (prazoColeta.getTime() - dataDisponivel.getTime()) / (1000 * 60 * 60 * 24)
+    (prazoColeta.getTime() - dataSaida.getTime()) / (1000 * 60 * 60 * 24)
   )
   
   // Veículo disponível antes ou no dia da coleta

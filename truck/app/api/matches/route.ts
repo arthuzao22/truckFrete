@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     const anuncios = await prisma.anuncioRetorno.findMany({
       where: {
         ativo: true,
-        dataDisponivel: {
+        dataSaida: {
           lte: frete.prazoColeta
         }
       },

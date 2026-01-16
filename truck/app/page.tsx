@@ -8,6 +8,9 @@ export default function Home() {
       <header className="container mx-auto px-4 py-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-blue-600">FreteConnect</h1>
         <div className="flex gap-4">
+          <Link href="/rotas">
+            <Button variant="secondary">Ver Rotas</Button>
+          </Link>
           <Link href="/login">
             <Button variant="secondary">Entrar</Button>
           </Link>
@@ -20,21 +23,21 @@ export default function Home() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h2 className="text-5xl font-bold text-gray-900 mb-6">
-          Marketplace Inteligente de Fretes
+          Marketplace de Caminhoneiros
         </h2>
         <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-          Conectamos motoristas e transportadoras com contratantes de frete,
-          priorizando veículos em rota de retorno para reduzir custos e aumentar eficiência
+          Motoristas anunciam suas rotas disponíveis. Contratantes encontram o caminhão ideal para sua carga.
+          Conectamos quem precisa com quem pode transportar.
         </p>
         <div className="flex gap-4 justify-center">
-          <Link href="/registro">
+          <Link href="/rotas">
             <Button className="text-lg px-8 py-3">
-              Começar Agora
+              🔍 Ver Rotas Disponíveis
             </Button>
           </Link>
-          <Link href="#como-funciona">
+          <Link href="/registro">
             <Button variant="secondary" className="text-lg px-8 py-3">
-              Saiba Mais
+              Cadastrar-se
             </Button>
           </Link>
         </div>
@@ -52,11 +55,11 @@ export default function Home() {
                 🚛 Para Motoristas
               </h4>
               <ul className="space-y-3 text-gray-700">
-                <li>✅ Cadastre seus veículos (cavalo + implementos)</li>
-                <li>✅ Anuncie quando estiver com retorno disponível</li>
-                <li>✅ Receba notificações de fretes compatíveis</li>
+                <li>✅ Cadastre seus veículos e implementos</li>
+                <li>✅ Anuncie suas rotas disponíveis</li>
+                <li>✅ Receba propostas de contratantes interessados</li>
                 <li>✅ Negocie diretamente com contratantes</li>
-                <li>✅ Aumente sua receita eliminando viagens vazias</li>
+                <li>✅ Aumente sua receita com rotas planejadas</li>
               </ul>
               <Link href="/registro" className="mt-6 inline-block">
                 <Button>Sou Motorista</Button>
@@ -69,15 +72,20 @@ export default function Home() {
                 📦 Para Contratantes
               </h4>
               <ul className="space-y-3 text-gray-700">
-                <li>✅ Publique suas necessidades de frete</li>
-                <li>✅ Algoritmo inteligente encontra veículos compatíveis</li>
-                <li>✅ Prioriza veículos em rota de retorno (menor custo)</li>
-                <li>✅ Compare scores e escolha o melhor match</li>
-                <li>✅ Economize até 40% aproveitando retornos</li>
+                <li>✅ Veja rotas disponíveis em tempo real</li>
+                <li>✅ Filtre por origem, destino e tipo de carga</li>
+                <li>✅ Entre em contato direto com motoristas</li>
+                <li>✅ Compare implementos e capacidades</li>
+                <li>✅ Encontre o caminhão ideal para sua carga</li>
               </ul>
-              <Link href="/registro" className="mt-6 inline-block">
-                <Button>Sou Contratante</Button>
-              </Link>
+              <div className="flex gap-3 mt-6">
+                <Link href="/rotas">
+                  <Button variant="secondary">Ver Rotas</Button>
+                </Link>
+                <Link href="/registro">
+                  <Button>Cadastrar</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

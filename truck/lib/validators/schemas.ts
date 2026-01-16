@@ -88,12 +88,35 @@ export const implementoSchema = z.object({
 export const anuncioRetornoSchema = z.object({
   origemCidade: z.string().min(2, "Cidade de origem obrigatória"),
   origemUf: z.string().length(2, "UF deve ter 2 caracteres").transform(val => val.toUpperCase()),
+  origemLat: z.number().optional(),
+  origemLng: z.number().optional(),
   destinoCidade: z.string().min(2, "Cidade de destino obrigatória"),
   destinoUf: z.string().length(2, "UF deve ter 2 caracteres").transform(val => val.toUpperCase()),
-  dataDisponivel: z.string().or(z.date()).transform(val => new Date(val)),
-  raioOperacao: z.number().int().min(10, "Raio mínimo de 10km").max(1000, "Raio máximo de 1000km"),
+  destinoLat: z.number().optional(),
+  destinoLng: z.number().optional(),
+  cidadesIntermediarias: z.array(z.object({
+    cidade: z.string(),
+    uf: z.string().length(2),
+    ordem: z.number().int()
+  })).optional(),
+  dataSaida: z.string().or(z.date()).transform(val => new Date(val)),
+  dataChegadaEstimada: z.string().or(z.date()).transform(val => new Date(val)).optional(),
+  flexibilidadeDias: z.number().int().min(0).max(30).default(0),
+  capacidadeDisponivel: z.enum(["TOTAL", "PARCIAL"]).default("TOTAL"),
+  pesoDisponivel: z.number().positive().optional(),
+  volumeDisponivel: z.number().positive().optional(),
+  tiposCargaAceita: z.array(z.string()).default([]),
+  tiposCargaRecusada: z.array(z.string()).default([]),
+  precoSugerido: z.number().positive().optional(),
+  precoNegociavel: z.boolean().default(true),
+  permiteWhatsApp: z.boolean().default(true),
+  permiteTelefone: z.boolean().default(false),
+  permiteChat: z.boolean().default(true),
+  raioOperacao: z.number().int().min(10).max(1000).optional(),
   observacoes: z.string().optional(),
-  veiculoId: z.string().cuid()
+  veiculoId: z.string().cuid(),
+  implementoId: z.string().cuid(),
+  expiresAt: z.string().or(z.date()).transform(val => new Date(val)).optional()
 })
 
 // ========================================

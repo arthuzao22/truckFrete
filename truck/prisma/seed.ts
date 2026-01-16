@@ -235,6 +235,17 @@ async function main() {
 
     console.log(`✅ ${4} implementos criados`)
 
+    // Buscar implementos criados com verificação
+    const implementos = await prisma.implemento.findMany()
+    const implemento1 = implementos.find(i => i.placa === 'IMP-0001')
+    const implemento2 = implementos.find(i => i.placa === 'IMP-0002')
+    const implemento3 = implementos.find(i => i.placa === 'IMP-0003')
+    const implemento4 = implementos.find(i => i.placa === 'IMP-0004')
+
+    if (!implemento1 || !implemento2 || !implemento3 || !implemento4) {
+      throw new Error('Implementos não encontrados após criação')
+    }
+
     // =============================
     // CRIAR ANÚNCIOS DE RETORNO
     // =============================
@@ -250,10 +261,12 @@ async function main() {
             destinoUf: 'RJ',
             destinoLat: -22.9068,
             destinoLng: -43.1729,
-            dataDisponivel: new Date('2026-01-20'),
+            dataSaida: new Date('2026-01-20'),
             raioOperacao: 100,
             observacoes: 'Disponível para carga geral ou refrigerada',
+            motoristaId: motorista1.id,
             veiculoId: veiculo1.id,
+            implementoId: implemento1.id
         },
     })
 
@@ -267,10 +280,12 @@ async function main() {
             destinoUf: 'SP',
             destinoLat: -23.5505,
             destinoLng: -46.6333,
-            dataDisponivel: new Date('2026-01-22'),
+            dataSaida: new Date('2026-01-22'),
             raioOperacao: 150,
             observacoes: 'Preferência para grãos',
+            motoristaId: motorista1.id,
             veiculoId: veiculo2.id,
+            implementoId: implemento2.id
         },
     })
 
@@ -284,9 +299,11 @@ async function main() {
             destinoUf: 'SC',
             destinoLat: -27.5954,
             destinoLng: -48.548,
-            dataDisponivel: new Date('2026-01-18'),
+            dataSaida: new Date('2026-01-18'),
             raioOperacao: 80,
+            motoristaId: motorista2.id,
             veiculoId: veiculo3.id,
+            implementoId: implemento3.id
         },
     })
 
