@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // ===========================
@@ -62,141 +62,210 @@ enum StatusMatch {
   RECUSADO
 }
 
+enum StatusAnuncio {
+  ATIVO
+  PAUSADO
+  EXPIRADO
+  FECHADO
+  CANCELADO
+}
+
+enum StatusInteresse {
+  PENDENTE
+  VISUALIZADO
+  EM_NEGOCIACAO
+  ACEITO
+  RECUSADO
+  CANCELADO
+}
+
 // ===========================
 // MODELS
 // ===========================
 
 model Usuario {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  senha         String
-  nome          String
-  cpfCnpj       String    @unique
-  telefone      String
-  role          Role      @default(MOTORISTA)
-  ativo         Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  senha     String
+  nome      String
+  cpfCnpj   String   @unique
+  telefone  String
+  role      Role     @default(MOTORISTA)
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relações
-  veiculos              Veiculo[]
-  fretesOfertados       Frete[]    @relation("motorista")
-  fretesContratados     Frete[]    @relation("contratante")
-  mensagensEnviadas     Mensagem[] @relation("remetente")
-  mensagensRecebidas    Mensagem[] @relation("destinatario")
-  
+  veiculos           Veiculo[]
+  fretesOfertados    Frete[]          @relation("motorista")
+  fretesContratados  Frete[]          @relation("contratante")
+  mensagensEnviadas  Mensagem[]       @relation("remetente")
+  mensagensRecebidas Mensagem[]       @relation("destinatario")
+  anunciosRota       AnuncioRetorno[] @relation("motorista_anuncios")
+  interesses         Interesse[]      @relation("contratante_interesses")
+
   @@index([email])
   @@index([cpfCnpj])
 }
 
 model Veiculo {
-  id                  String       @id @default(cuid())
-  tipo                TipoVeiculo
-  marca               String
-  modelo              String
-  anoFabricacao       Int
-  cor                 String
-  placa               String       @unique
-  renavam             String       @unique
-  configuracaoTracao  String?      // 4x2, 6x2, 6x4
-  ativo               Boolean      @default(true)
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
+  id                 String      @id @default(cuid())
+  tipo               TipoVeiculo
+  marca              String
+  modelo             String
+  anoFabricacao      Int
+  cor                String
+  placa              String      @unique
+  renavam            String      @unique
+  configuracaoTracao String? // 4x2, 6x2, 6x4
+  ativo              Boolean     @default(true)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 
-  usuarioId           String
-  usuario             Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
   // Relações
-  implementos         Implemento[]
-  anunciosRetorno     AnuncioRetorno[]
-  
+  implementos     Implemento[]
+  anunciosRetorno AnuncioRetorno[]
+
   @@index([usuarioId])
   @@index([placa])
 }
 
 model Implemento {
-  id                String                @id @default(cuid())
-  tipoEstrutura     TipoImplemento
-  tipoAplicacao     AplicacaoImplemento
-  qtdeEixos         Int
-  placa             String                @unique
-  renavam           String                @unique
-  capacidadePeso    Float                 // em kg
-  capacidadeVolume  Float?                // em m³
-  comprimento       Float?                // em metros
-  largura           Float?                // em metros
-  altura            Float?                // em metros
-  ativo             Boolean               @default(true)
-  createdAt         DateTime              @default(now())
-  updatedAt         DateTime              @updatedAt
+  id               String              @id @default(cuid())
+  tipoEstrutura    TipoImplemento
+  tipoAplicacao    AplicacaoImplemento
+  qtdeEixos        Int
+  placa            String              @unique
+  renavam          String              @unique
+  capacidadePeso   Float // em kg
+  capacidadeVolume Float? // em m³
+  comprimento      Float? // em metros
+  largura          Float? // em metros
+  altura           Float? // em metros
+  ativo            Boolean             @default(true)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
 
-  veiculoId         String
-  veiculo           Veiculo               @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
-  
+  veiculoId String
+  veiculo   Veiculo @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+
+  // Relações
+  anunciosRota AnuncioRetorno[] @relation("implemento_anuncios")
+
   @@index([veiculoId])
   @@index([placa])
 }
 
 model AnuncioRetorno {
-  id                String    @id @default(cuid())
-  origemCidade      String
-  origemUf          String
-  origemLat         Float?
-  origemLng         Float?
-  destinoCidade     String
-  destinoUf         String
-  destinoLat        Float?
-  destinoLng        Float?
-  dataDisponivel    DateTime
-  raioOperacao      Int       // em km
-  observacoes       String?   @db.Text
-  ativo             Boolean   @default(true)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id String @id @default(cuid())
 
-  veiculoId         String
-  veiculo           Veiculo   @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
-  
+  // Relacionamentos
+  motoristaId String
+  motorista   Usuario @relation("motorista_anuncios", fields: [motoristaId], references: [id], onDelete: Cascade)
+
+  veiculoId String
+  veiculo   Veiculo @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+
+  implementoId String
+  implemento   Implemento @relation("implemento_anuncios", fields: [implementoId], references: [id], onDelete: Cascade)
+
+  // Rota
+  origemCidade  String
+  origemUf      String
+  origemLat     Float?
+  origemLng     Float?
+  destinoCidade String
+  destinoUf     String
+  destinoLat    Float?
+  destinoLng    Float?
+
+  // Cidades intermediárias (JSON array)
+  cidadesIntermediarias Json? // [{ cidade, uf, ordem }]
+
+  // Datas
+  dataSaida           DateTime // antiga dataDisponivel
+  dataChegadaEstimada DateTime?
+  flexibilidadeDias   Int       @default(0)
+
+  // Capacidade
+  capacidadeDisponivel String @default("TOTAL") // TOTAL, PARCIAL
+  pesoDisponivel       Float? // toneladas disponíveis
+  volumeDisponivel     Float? // m³ disponíveis
+
+  // Preferências de Carga
+  tiposCargaAceita   String[] @default([])
+  tiposCargaRecusada String[] @default([])
+
+  // Preço
+  precoSugerido   Decimal?
+  precoNegociavel Boolean  @default(true)
+
+  // Contato
+  permiteWhatsApp Boolean @default(true)
+  permiteTelefone Boolean @default(false)
+  permiteChat     Boolean @default(true)
+
+  // Status
+  status        StatusAnuncio @default(ATIVO)
+  visualizacoes Int           @default(0)
+
+  // Outros
+  raioOperacao Int? // em km (mantido por compatibilidade)
+  observacoes  String? @db.Text
+  ativo        Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime? // data após a qual o anúncio expira
+
   // Relações
-  matches           Match[]
-  
+  matches    Match[]
+  interesses Interesse[] @relation("anuncio_interesses")
+
+  @@index([motoristaId])
   @@index([veiculoId])
+  @@index([implementoId])
   @@index([ativo])
-  @@index([dataDisponivel])
+  @@index([status])
+  @@index([dataSaida])
 }
 
 model Frete {
-  id                String       @id @default(cuid())
-  origemCidade      String
-  origemUf          String
-  origemLat         Float?
-  origemLng         Float?
-  destinoCidade     String
-  destinoUf         String
-  destinoLat        Float?
-  destinoLng        Float?
-  tipoCarga         String
-  descricaoCarga    String?      @db.Text
-  peso              Float        // em kg
-  volume            Float?       // em m³
-  prazoColeta       DateTime
-  prazoEntrega      DateTime
-  valorProposto     Float?       // em R$
-  status            StatusFrete  @default(ABERTO)
-  observacoes       String?      @db.Text
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id             String      @id @default(cuid())
+  origemCidade   String
+  origemUf       String
+  origemLat      Float?
+  origemLng      Float?
+  destinoCidade  String
+  destinoUf      String
+  destinoLat     Float?
+  destinoLng     Float?
+  tipoCarga      String
+  descricaoCarga String?     @db.Text
+  peso           Float // em kg
+  volume         Float? // em m³
+  prazoColeta    DateTime
+  prazoEntrega   DateTime
+  valorProposto  Float? // em R$
+  status         StatusFrete @default(ABERTO)
+  observacoes    String?     @db.Text
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  contratanteId     String
-  contratante       Usuario      @relation("contratante", fields: [contratanteId], references: [id], onDelete: Cascade)
-  
-  motoristaId       String?
-  motorista         Usuario?     @relation("motorista", fields: [motoristaId], references: [id], onDelete: SetNull)
-  
+  contratanteId String
+  contratante   Usuario @relation("contratante", fields: [contratanteId], references: [id], onDelete: Cascade)
+
+  motoristaId String?
+  motorista   Usuario? @relation("motorista", fields: [motoristaId], references: [id], onDelete: SetNull)
+
   // Relações
-  matches           Match[]
-  mensagens         Mensagem[]
-  
+  matches   Match[]
+  mensagens Mensagem[]
+
   @@index([contratanteId])
   @@index([motoristaId])
   @@index([status])
@@ -204,43 +273,78 @@ model Frete {
 }
 
 model Match {
-  id                String       @id @default(cuid())
-  score             Float        // Pontuação do match (0-100)
-  status            StatusMatch  @default(PENDENTE)
-  detalhes          String?      @db.Text // JSON com detalhes do cálculo
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id        String      @id @default(cuid())
+  score     Float // Pontuação do match (0-100)
+  status    StatusMatch @default(PENDENTE)
+  detalhes  String?     @db.Text // JSON com detalhes do cálculo
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
-  freteId           String
-  frete             Frete        @relation(fields: [freteId], references: [id], onDelete: Cascade)
-  
-  anuncioId         String
-  anuncio           AnuncioRetorno @relation(fields: [anuncioId], references: [id], onDelete: Cascade)
-  
+  freteId String
+  frete   Frete  @relation(fields: [freteId], references: [id], onDelete: Cascade)
+
+  anuncioId String
+  anuncio   AnuncioRetorno @relation(fields: [anuncioId], references: [id], onDelete: Cascade)
+
+  @@unique([freteId, anuncioId])
   @@index([freteId])
   @@index([anuncioId])
   @@index([status])
   @@index([score])
-  @@unique([freteId, anuncioId])
 }
 
 model Mensagem {
-  id                String    @id @default(cuid())
-  conteudo          String    @db.Text
-  lida              Boolean   @default(false)
-  createdAt         DateTime  @default(now())
+  id        String   @id @default(cuid())
+  conteudo  String   @db.Text
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-  remetenteId       String
-  remetente         Usuario   @relation("remetente", fields: [remetenteId], references: [id], onDelete: Cascade)
-  
-  destinatarioId    String
-  destinatario      Usuario   @relation("destinatario", fields: [destinatarioId], references: [id], onDelete: Cascade)
-  
-  freteId           String?
-  frete             Frete?    @relation(fields: [freteId], references: [id], onDelete: Cascade)
-  
+  remetenteId String
+  remetente   Usuario @relation("remetente", fields: [remetenteId], references: [id], onDelete: Cascade)
+
+  destinatarioId String
+  destinatario   Usuario @relation("destinatario", fields: [destinatarioId], references: [id], onDelete: Cascade)
+
+  freteId String?
+  frete   Frete?  @relation(fields: [freteId], references: [id], onDelete: Cascade)
+
   @@index([remetenteId])
   @@index([destinatarioId])
   @@index([freteId])
+  @@index([createdAt])
+}
+
+model Interesse {
+  id String @id @default(cuid())
+
+  // Relacionamentos
+  anuncioId String
+  anuncio   AnuncioRetorno @relation("anuncio_interesses", fields: [anuncioId], references: [id], onDelete: Cascade)
+
+  contratanteId String
+  contratante   Usuario @relation("contratante_interesses", fields: [contratanteId], references: [id], onDelete: Cascade)
+
+  // Detalhes da Carga
+  descricaoCarga String? @db.Text
+  tipoCarga      String?
+  pesoCarga      Float? // em kg
+  volumeCarga    Float? // em m³
+
+  // Proposta
+  valorProposto Decimal?
+  observacoes   String?  @db.Text
+  urgente       Boolean  @default(false)
+
+  // Status
+  status       StatusInteresse @default(PENDENTE)
+  motivoRecusa String?         @db.Text
+
+  // Timestamps
+  createdAt    DateTime  @default(now())
+  respondidoEm DateTime?
+
+  @@index([anuncioId])
+  @@index([contratanteId])
+  @@index([status])
   @@index([createdAt])
 }
