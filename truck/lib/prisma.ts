@@ -7,7 +7,15 @@ const prismaClientSingleton = () => {
   const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL
 
   if (!connectionString) {
-    throw new Error('DATABASE_URL or DIRECT_URL environment variable is not set')
+    // For build time without database, use a mock URL to allow instantiation
+    const mockConnectionString = 'postgresql://user:pass@localhost:5432/db'
+    const pool = new Pool({ connectionString: mockConnectionString })
+    const adapter = new PrismaPg(pool)
+    
+    return new PrismaClient({
+      adapter,
+      log: ['error'],
+    })
   }
 
   // Create a PostgreSQL connection pool
@@ -30,5 +38,6 @@ declare global {
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 
 export default prisma
+export { prisma }
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
