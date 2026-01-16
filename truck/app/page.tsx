@@ -1,65 +1,147 @@
-import Image from "next/image";
+import Link from "next/link"
+import { Button } from "@/components/ui/Button"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+      {/* Header */}
+      <header className="container mx-auto px-4 py-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-blue-600">FreteConnect</h1>
+        <div className="flex gap-4">
+          <Link href="/login">
+            <Button variant="secondary">Entrar</Button>
+          </Link>
+          <Link href="/registro">
+            <Button>Cadastrar</Button>
+          </Link>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-20 text-center">
+        <h2 className="text-5xl font-bold text-gray-900 mb-6">
+          Marketplace Inteligente de Fretes
+        </h2>
+        <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+          Conectamos motoristas e transportadoras com contratantes de frete,
+          priorizando veículos em rota de retorno para reduzir custos e aumentar eficiência
+        </p>
+        <div className="flex gap-4 justify-center">
+          <Link href="/registro">
+            <Button className="text-lg px-8 py-3">
+              Começar Agora
+            </Button>
+          </Link>
+          <Link href="#como-funciona">
+            <Button variant="secondary" className="text-lg px-8 py-3">
+              Saiba Mais
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="como-funciona" className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <h3 className="text-3xl font-bold text-center mb-12">Como Funciona</h3>
+          
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            {/* Para Motoristas */}
+            <div className="bg-blue-50 p-8 rounded-lg">
+              <h4 className="text-2xl font-bold text-blue-600 mb-4">
+                🚛 Para Motoristas
+              </h4>
+              <ul className="space-y-3 text-gray-700">
+                <li>✅ Cadastre seus veículos (cavalo + implementos)</li>
+                <li>✅ Anuncie quando estiver com retorno disponível</li>
+                <li>✅ Receba notificações de fretes compatíveis</li>
+                <li>✅ Negocie diretamente com contratantes</li>
+                <li>✅ Aumente sua receita eliminando viagens vazias</li>
+              </ul>
+              <Link href="/registro" className="mt-6 inline-block">
+                <Button>Sou Motorista</Button>
+              </Link>
+            </div>
+
+            {/* Para Contratantes */}
+            <div className="bg-green-50 p-8 rounded-lg">
+              <h4 className="text-2xl font-bold text-green-600 mb-4">
+                📦 Para Contratantes
+              </h4>
+              <ul className="space-y-3 text-gray-700">
+                <li>✅ Publique suas necessidades de frete</li>
+                <li>✅ Algoritmo inteligente encontra veículos compatíveis</li>
+                <li>✅ Prioriza veículos em rota de retorno (menor custo)</li>
+                <li>✅ Compare scores e escolha o melhor match</li>
+                <li>✅ Economize até 40% aproveitando retornos</li>
+              </ul>
+              <Link href="/registro" className="mt-6 inline-block">
+                <Button>Sou Contratante</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h3 className="text-3xl font-bold text-center mb-12">Por Que FreteConnect?</h3>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="text-5xl mb-4">🎯</div>
+              <h4 className="text-xl font-bold mb-2">Matching Inteligente</h4>
+              <p className="text-gray-700">
+                Algoritmo avançado que considera rota, capacidade, tipo de carga e timing
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-5xl mb-4">💰</div>
+              <h4 className="text-xl font-bold mb-2">Economia Real</h4>
+              <p className="text-gray-700">
+                Reduza custos aproveitando fretes de retorno e elimine viagens vazias
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-5xl mb-4">🔒</div>
+              <h4 className="text-xl font-bold mb-2">Seguro e Confiável</h4>
+              <p className="text-gray-700">
+                Sistema completo de autenticação, validação e negociação direta
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-blue-600 py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-4xl font-bold text-white mb-6">
+            Pronto para Começar?
+          </h3>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Junte-se a centenas de motoristas e contratantes que já estão economizando
+            com o FreteConnect
           </p>
+          <Link href="/registro">
+            <Button className="text-lg px-8 py-3 bg-white text-blue-600 hover:bg-gray-100">
+              Criar Conta Grátis
+            </Button>
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p>&copy; 2024 FreteConnect. Todos os direitos reservados.</p>
+          <p className="mt-2 text-sm">Marketplace Inteligente de Fretes de Retorno</p>
         </div>
-      </main>
+      </footer>
     </div>
-  );
+  )
 }
+

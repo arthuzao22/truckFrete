@@ -1,0 +1,246 @@
+// FreteConnect - Marketplace de Fretes
+// Prisma Schema - PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===========================
+// ENUMS
+// ===========================
+
+enum Role {
+  MOTORISTA
+  CONTRATANTE
+  ADMIN
+}
+
+enum TipoVeiculo {
+  CAVALO_MECANICO
+  UTILITARIO
+}
+
+enum TipoImplemento {
+  SEMIRREBOQUE_SIMPLES
+  BITREM
+  RODOTREM
+  REBOQUE_SEMIRREBOQUE
+  PRANCHA
+  EXTENSIVA
+}
+
+enum AplicacaoImplemento {
+  BAU
+  SIDER
+  GRANELEIRA
+  BASCULANTE
+  TANQUE
+  PRANCHA
+  PORTA_CONTAINER
+  FLORESTAL
+  CANAVIEIRA
+  BOBINEIRA
+  LINHA_EIXOS
+}
+
+enum StatusFrete {
+  ABERTO
+  NEGOCIANDO
+  ACEITO
+  EM_TRANSPORTE
+  ENTREGUE
+  CANCELADO
+}
+
+enum StatusMatch {
+  PENDENTE
+  ACEITO
+  RECUSADO
+}
+
+// ===========================
+// MODELS
+// ===========================
+
+model Usuario {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  senha         String
+  nome          String
+  cpfCnpj       String    @unique
+  telefone      String
+  role          Role      @default(MOTORISTA)
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relações
+  veiculos              Veiculo[]
+  fretesOfertados       Frete[]    @relation("motorista")
+  fretesContratados     Frete[]    @relation("contratante")
+  mensagensEnviadas     Mensagem[] @relation("remetente")
+  mensagensRecebidas    Mensagem[] @relation("destinatario")
+  
+  @@index([email])
+  @@index([cpfCnpj])
+}
+
+model Veiculo {
+  id                  String       @id @default(cuid())
+  tipo                TipoVeiculo
+  marca               String
+  modelo              String
+  anoFabricacao       Int
+  cor                 String
+  placa               String       @unique
+  renavam             String       @unique
+  configuracaoTracao  String?      // 4x2, 6x2, 6x4
+  ativo               Boolean      @default(true)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  usuarioId           String
+  usuario             Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  // Relações
+  implementos         Implemento[]
+  anunciosRetorno     AnuncioRetorno[]
+  
+  @@index([usuarioId])
+  @@index([placa])
+}
+
+model Implemento {
+  id                String                @id @default(cuid())
+  tipoEstrutura     TipoImplemento
+  tipoAplicacao     AplicacaoImplemento
+  qtdeEixos         Int
+  placa             String                @unique
+  renavam           String                @unique
+  capacidadePeso    Float                 // em kg
+  capacidadeVolume  Float?                // em m³
+  comprimento       Float?                // em metros
+  largura           Float?                // em metros
+  altura            Float?                // em metros
+  ativo             Boolean               @default(true)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  veiculoId         String
+  veiculo           Veiculo               @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  
+  @@index([veiculoId])
+  @@index([placa])
+}
+
+model AnuncioRetorno {
+  id                String    @id @default(cuid())
+  origemCidade      String
+  origemUf          String
+  origemLat         Float?
+  origemLng         Float?
+  destinoCidade     String
+  destinoUf         String
+  destinoLat        Float?
+  destinoLng        Float?
+  dataDisponivel    DateTime
+  raioOperacao      Int       // em km
+  observacoes       String?   @db.Text
+  ativo             Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  veiculoId         String
+  veiculo           Veiculo   @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  
+  // Relações
+  matches           Match[]
+  
+  @@index([veiculoId])
+  @@index([ativo])
+  @@index([dataDisponivel])
+}
+
+model Frete {
+  id                String       @id @default(cuid())
+  origemCidade      String
+  origemUf          String
+  origemLat         Float?
+  origemLng         Float?
+  destinoCidade     String
+  destinoUf         String
+  destinoLat        Float?
+  destinoLng        Float?
+  tipoCarga         String
+  descricaoCarga    String?      @db.Text
+  peso              Float        // em kg
+  volume            Float?       // em m³
+  prazoColeta       DateTime
+  prazoEntrega      DateTime
+  valorProposto     Float?       // em R$
+  status            StatusFrete  @default(ABERTO)
+  observacoes       String?      @db.Text
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  contratanteId     String
+  contratante       Usuario      @relation("contratante", fields: [contratanteId], references: [id], onDelete: Cascade)
+  
+  motoristaId       String?
+  motorista         Usuario?     @relation("motorista", fields: [motoristaId], references: [id], onDelete: SetNull)
+  
+  // Relações
+  matches           Match[]
+  mensagens         Mensagem[]
+  
+  @@index([contratanteId])
+  @@index([motoristaId])
+  @@index([status])
+  @@index([prazoColeta])
+}
+
+model Match {
+  id                String       @id @default(cuid())
+  score             Float        // Pontuação do match (0-100)
+  status            StatusMatch  @default(PENDENTE)
+  detalhes          String?      @db.Text // JSON com detalhes do cálculo
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  freteId           String
+  frete             Frete        @relation(fields: [freteId], references: [id], onDelete: Cascade)
+  
+  anuncioId         String
+  anuncio           AnuncioRetorno @relation(fields: [anuncioId], references: [id], onDelete: Cascade)
+  
+  @@index([freteId])
+  @@index([anuncioId])
+  @@index([status])
+  @@index([score])
+  @@unique([freteId, anuncioId])
+}
+
+model Mensagem {
+  id                String    @id @default(cuid())
+  conteudo          String    @db.Text
+  lida              Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+
+  remetenteId       String
+  remetente         Usuario   @relation("remetente", fields: [remetenteId], references: [id], onDelete: Cascade)
+  
+  destinatarioId    String
+  destinatario      Usuario   @relation("destinatario", fields: [destinatarioId], references: [id], onDelete: Cascade)
+  
+  freteId           String?
+  frete             Frete?    @relation(fields: [freteId], references: [id], onDelete: Cascade)
+  
+  @@index([remetenteId])
+  @@index([destinatarioId])
+  @@index([freteId])
+  @@index([createdAt])
+}
