@@ -222,8 +222,8 @@ function calcularCapacidadeScore(frete: Frete, anuncio: AnuncioRetorno): number 
 function calcularTempoScore(frete: Frete, anuncio: AnuncioRetorno): number {
   const dataDisponivel = new Date(anuncio.dataDisponivel)
   const prazoColeta = new Date(frete.prazoColeta)
-  // prazoEntrega is kept for future use
-  // const prazoEntrega = new Date(frete.prazoEntrega)
+  
+  // TODO: Implement delivery date validation in future versions
   
   // Diferença em dias
   const diferenciaColeta = Math.floor(
