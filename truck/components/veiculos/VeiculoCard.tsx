@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
+import { Plus, Trash2, ChevronDown, ChevronUp, Truck } from "lucide-react"
 
 interface Implemento {
   id: string
@@ -88,115 +89,111 @@ export function VeiculoCard({ veiculo, onAddImplemento, onRefresh }: VeiculoCard
   }
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card variant="glass" hover>
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6 0a1 1 0 001 1h2a1 1 0 001-1m-6 0h6" />
-            </svg>
-            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+            <Truck className="w-5 h-5 text-blue-400" />
+            <span className="text-xs font-medium text-blue-400 bg-blue-500/20 px-2 py-1 rounded border border-blue-500/30">
               {TIPO_LABELS[veiculo.tipo] || veiculo.tipo}
             </span>
           </div>
-          <h3 className="text-lg font-bold text-gray-900">
+          <h3 className="text-lg font-bold text-white">
             {veiculo.marca} {veiculo.modelo}
           </h3>
-          <p className="text-sm text-gray-500">Ano {veiculo.anoFabricacao}</p>
+          <p className="text-sm text-gray-400">Ano {veiculo.anoFabricacao}</p>
         </div>
       </div>
 
       <div className="space-y-2 mb-4">
         <div className="flex items-center text-sm">
-          <span className="font-medium text-gray-700 w-24">Placa:</span>
-          <span className="text-gray-900 font-mono">{veiculo.placa}</span>
+          <span className="font-medium text-gray-400 w-24">Placa:</span>
+          <span className="text-white font-mono">{veiculo.placa}</span>
         </div>
         <div className="flex items-center text-sm">
-          <span className="font-medium text-gray-700 w-24">Cor:</span>
-          <span className="text-gray-900">{veiculo.cor}</span>
+          <span className="font-medium text-gray-400 w-24">Cor:</span>
+          <span className="text-white">{veiculo.cor}</span>
         </div>
         {veiculo.configuracaoTracao && (
           <div className="flex items-center text-sm">
-            <span className="font-medium text-gray-700 w-24">Tração:</span>
-            <span className="text-gray-900">{veiculo.configuracaoTracao}</span>
+            <span className="font-medium text-gray-400 w-24">Tração:</span>
+            <span className="text-white">{veiculo.configuracaoTracao}</span>
           </div>
         )}
       </div>
 
-      <div className="border-t border-gray-200 pt-4">
+      <div className="border-t border-white/10 pt-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-gray-400">
               Implementos ({veiculo.implementos.length})
             </span>
           </div>
           <button
             onClick={() => setShowImplementos(!showImplementos)}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-colors"
           >
-            {showImplementos ? "Ocultar" : "Ver"}
+            {showImplementos ? (
+              <>Ocultar <ChevronUp className="h-4 w-4" /></>
+            ) : (
+              <>Ver <ChevronDown className="h-4 w-4" /></>
+            )}
           </button>
         </div>
 
         {showImplementos && (
           <div className="space-y-3 mb-3">
             {veiculo.implementos.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4 bg-gray-50 rounded">
+              <p className="text-sm text-gray-500 text-center py-4 bg-white/5 rounded-lg border border-white/10">
                 Nenhum implemento cadastrado
               </p>
             ) : (
               veiculo.implementos.map((implemento) => (
-                <div 
+                <div
                   key={implemento.id}
-                  className="bg-gray-50 rounded-lg p-3 border border-gray-200"
+                  className="bg-white/5 rounded-lg p-3 border border-white/10"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-white">
                         {APLICACAO_LABELS[implemento.tipoAplicacao] || implemento.tipoAplicacao}
                       </p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-gray-400">
                         {ESTRUTURA_LABELS[implemento.tipoEstrutura] || implemento.tipoEstrutura}
                       </p>
                     </div>
                     <button
                       onClick={() => handleDeleteImplemento(implemento.id)}
                       disabled={deletingId === implemento.id}
-                      className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                      className="text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors"
                       title="Excluir implemento"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="text-gray-600">Placa:</span>
-                      <span className="ml-1 font-mono font-medium text-gray-900">
+                      <span className="text-gray-500">Placa:</span>
+                      <span className="ml-1 font-mono font-medium text-white">
                         {implemento.placa}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Eixos:</span>
-                      <span className="ml-1 font-medium text-gray-900">
+                      <span className="text-gray-500">Eixos:</span>
+                      <span className="ml-1 font-medium text-white">
                         {implemento.qtdeEixos}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-600">Peso:</span>
-                      <span className="ml-1 font-medium text-gray-900">
+                      <span className="text-gray-500">Peso:</span>
+                      <span className="ml-1 font-medium text-white">
                         {(implemento.capacidadePeso / 1000).toFixed(1)}t
                       </span>
                     </div>
                     {implemento.capacidadeVolume && (
                       <div>
-                        <span className="text-gray-600">Volume:</span>
-                        <span className="ml-1 font-medium text-gray-900">
+                        <span className="text-gray-500">Volume:</span>
+                        <span className="ml-1 font-medium text-white">
                           {implemento.capacidadeVolume.toFixed(1)}m³
                         </span>
                       </div>
@@ -211,11 +208,10 @@ export function VeiculoCard({ veiculo, onAddImplemento, onRefresh }: VeiculoCard
         <Button
           onClick={onAddImplemento}
           variant="secondary"
-          className="w-full text-sm"
+          fullWidth
+          size="sm"
+          icon={<Plus className="h-4 w-4" />}
         >
-          <svg className="w-4 h-4 mr-2 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
           Adicionar Implemento
         </Button>
       </div>

@@ -2,14 +2,14 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { Card } from "@/components/ui/Card"
 import { StatsCard } from "@/components/dashboard/StatsCard"
-import { Truck, Package, Clock, TrendingUp, Plus, Search, MessageCircle } from "lucide-react"
+import { Plus, Package, Search, TrendingUp, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 
 export default async function DashboardPage() {
   const session = await auth()
-  
+
   if (!session?.user) {
     redirect("/login")
   }
@@ -18,18 +18,18 @@ export default async function DashboardPage() {
   const role = session.user.role
 
   let stats
-  
+
   if (role === "MOTORISTA") {
     stats = await prisma.$transaction([
       prisma.veiculo.count({ where: { usuarioId: userId, ativo: true } }),
-      prisma.anuncioRetorno.count({ 
-        where: { 
+      prisma.anuncioRetorno.count({
+        where: {
           veiculo: { usuarioId: userId },
-          ativo: true 
-        } 
+          ativo: true
+        }
       }),
-      prisma.frete.count({ 
-        where: { 
+      prisma.frete.count({
+        where: {
           motoristaId: userId,
           status: { in: ["ACEITO", "EM_TRANSPORTE"] }
         }
@@ -38,6 +38,7 @@ export default async function DashboardPage() {
 
     return (
       <div className="space-y-8">
+        {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">
             Dashboard Motorista
@@ -52,20 +53,20 @@ export default async function DashboardPage() {
           <StatsCard
             title="Veículos Ativos"
             value={stats[0]}
-            icon={Truck}
+            iconName="truck"
             color="blue"
             trend={{ value: 12, isPositive: true }}
           />
           <StatsCard
             title="Anúncios de Retorno"
             value={stats[1]}
-            icon={Package}
+            iconName="package"
             color="green"
           />
           <StatsCard
             title="Fretes em Andamento"
             value={stats[2]}
-            icon={Clock}
+            iconName="clock"
             color="purple"
             trend={{ value: 5, isPositive: true }}
           />
@@ -73,7 +74,7 @@ export default async function DashboardPage() {
 
         {/* Quick Actions */}
         <Card variant="glass">
-          <h3 className="text-xl font-bold text-white mb-4">Ações Rápidas</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">Ações Rápidas</h3>
           <div className="grid gap-3 md:grid-cols-3">
             <Link href="/veiculos?novo=true">
               <Button variant="outline" fullWidth icon={<Plus className="h-4 w-4" />}>
@@ -96,45 +97,45 @@ export default async function DashboardPage() {
         {/* Info Cards */}
         <div className="grid gap-6 md:grid-cols-2">
           <Card variant="glass">
-            <h3 className="text-xl font-bold text-white mb-4">
+            <h3 className="text-lg font-semibold text-white mb-4">
               📊 Suas Estatísticas
             </h3>
-            <div className="space-y-3 text-gray-300">
-              <div className="flex justify-between">
-                <span>Total de fretes realizados</span>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2 border-b border-white/10">
+                <span className="text-gray-400">Total de fretes realizados</span>
                 <span className="font-semibold text-white">0</span>
               </div>
-              <div className="flex justify-between">
-                <span>Avaliação média</span>
+              <div className="flex justify-between items-center py-2 border-b border-white/10">
+                <span className="text-gray-400">Avaliação média</span>
                 <span className="font-semibold text-yellow-400">⭐ 0.0</span>
               </div>
-              <div className="flex justify-between">
-                <span>Taxa de conclusão</span>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-400">Taxa de conclusão</span>
                 <span className="font-semibold text-green-400">0%</span>
               </div>
             </div>
           </Card>
 
           <Card variant="glass">
-            <h3 className="text-xl font-bold text-white mb-4">
+            <h3 className="text-lg font-semibold text-white mb-4">
               💡 Dicas para Começar
             </h3>
-            <ol className="space-y-2 text-sm text-gray-300">
-              <li className="flex gap-2">
-                <span className="text-blue-400">1.</span>
-                Cadastre seus veículos (cavalo mecânico + implementos)
+            <ol className="space-y-3 text-sm">
+              <li className="flex gap-3 items-start">
+                <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">1</span>
+                <span className="text-gray-300">Cadastre seus veículos (cavalo mecânico + implementos)</span>
               </li>
-              <li className="flex gap-2">
-                <span className="text-blue-400">2.</span>
-                Anuncie quando estiver com retorno disponível
+              <li className="flex gap-3 items-start">
+                <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">2</span>
+                <span className="text-gray-300">Anuncie quando estiver com retorno disponível</span>
               </li>
-              <li className="flex gap-2">
-                <span className="text-blue-400">3.</span>
-                Receba notificações de fretes compatíveis
+              <li className="flex gap-3 items-start">
+                <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">3</span>
+                <span className="text-gray-300">Receba notificações de fretes compatíveis</span>
               </li>
-              <li className="flex gap-2">
-                <span className="text-blue-400">4.</span>
-                Aumente sua receita eliminando viagens vazias!
+              <li className="flex gap-3 items-start">
+                <span className="flex-shrink-0 w-6 h-6 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold border border-green-500/30">4</span>
+                <span className="text-gray-300">Aumente sua receita eliminando viagens vazias!</span>
               </li>
             </ol>
           </Card>
@@ -147,8 +148,8 @@ export default async function DashboardPage() {
   stats = await prisma.$transaction([
     prisma.frete.count({ where: { contratanteId: userId, status: "ABERTO" } }),
     prisma.frete.count({ where: { contratanteId: userId, status: "EM_TRANSPORTE" } }),
-    prisma.match.count({ 
-      where: { 
+    prisma.match.count({
+      where: {
         frete: { contratanteId: userId },
         status: "PENDENTE"
       }
@@ -157,6 +158,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Dashboard Contratante
@@ -171,27 +173,27 @@ export default async function DashboardPage() {
         <StatsCard
           title="Fretes Abertos"
           value={stats[0]}
-          icon={Package}
+          iconName="package"
           color="blue"
         />
         <StatsCard
           title="Em Transporte"
           value={stats[1]}
-          icon={Truck}
+          iconName="truck"
           color="green"
           trend={{ value: 8, isPositive: true }}
         />
         <StatsCard
           title="Matches Disponíveis"
           value={stats[2]}
-          icon={TrendingUp}
+          iconName="trending-up"
           color="purple"
         />
       </div>
 
       {/* Quick Actions */}
       <Card variant="glass">
-        <h3 className="text-xl font-bold text-white mb-4">Ações Rápidas</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Ações Rápidas</h3>
         <div className="grid gap-3 md:grid-cols-3">
           <Link href="/fretes?novo=true">
             <Button variant="outline" fullWidth icon={<Plus className="h-4 w-4" />}>
@@ -214,45 +216,45 @@ export default async function DashboardPage() {
       {/* Info Cards */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card variant="glass">
-          <h3 className="text-xl font-bold text-white mb-4">
+          <h3 className="text-lg font-semibold text-white mb-4">
             📊 Suas Estatísticas
           </h3>
-          <div className="space-y-3 text-gray-300">
-            <div className="flex justify-between">
-              <span>Total de fretes publicados</span>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center py-2 border-b border-white/10">
+              <span className="text-gray-400">Total de fretes publicados</span>
               <span className="font-semibold text-white">0</span>
             </div>
-            <div className="flex justify-between">
-              <span>Economia estimada</span>
+            <div className="flex justify-between items-center py-2 border-b border-white/10">
+              <span className="text-gray-400">Economia estimada</span>
               <span className="font-semibold text-green-400">R$ 0,00</span>
             </div>
-            <div className="flex justify-between">
-              <span>Taxa de satisfação</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-gray-400">Taxa de satisfação</span>
               <span className="font-semibold text-yellow-400">⭐ 0.0</span>
             </div>
           </div>
         </Card>
 
         <Card variant="glass">
-          <h3 className="text-xl font-bold text-white mb-4">
+          <h3 className="text-lg font-semibold text-white mb-4">
             💡 Dicas para Começar
           </h3>
-          <ol className="space-y-2 text-sm text-gray-300">
-            <li className="flex gap-2">
-              <span className="text-blue-400">1.</span>
-              Publique suas necessidades de frete
+          <ol className="space-y-3 text-sm">
+            <li className="flex gap-3 items-start">
+              <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">1</span>
+              <span className="text-gray-300">Publique suas necessidades de frete</span>
             </li>
-            <li className="flex gap-2">
-              <span className="text-blue-400">2.</span>
-              Nosso algoritmo encontra veículos compatíveis
+            <li className="flex gap-3 items-start">
+              <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">2</span>
+              <span className="text-gray-300">Nosso algoritmo encontra veículos compatíveis</span>
             </li>
-            <li className="flex gap-2">
-              <span className="text-blue-400">3.</span>
-              Prioriza veículos em rota de retorno (menor custo)
+            <li className="flex gap-3 items-start">
+              <span className="flex-shrink-0 w-6 h-6 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">3</span>
+              <span className="text-gray-300">Prioriza veículos em rota de retorno (menor custo)</span>
             </li>
-            <li className="flex gap-2">
-              <span className="text-blue-400">4.</span>
-              Economize até 40% aproveitando retornos!
+            <li className="flex gap-3 items-start">
+              <span className="flex-shrink-0 w-6 h-6 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold border border-green-500/30">4</span>
+              <span className="text-gray-300">Economize até 40% aproveitando retornos!</span>
             </li>
           </ol>
         </Card>

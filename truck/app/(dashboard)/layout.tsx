@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SessionProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <DashboardNav />
         <main className="container mx-auto px-4 py-8">
           {children}

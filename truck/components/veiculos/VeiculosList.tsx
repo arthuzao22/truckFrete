@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card"
 import { VeiculoCard } from "./VeiculoCard"
 import { VeiculoFormModal } from "./VeiculoFormModal"
 import { ImplementoFormModal } from "./ImplementoFormModal"
+import { Plus } from "lucide-react"
 
 interface Implemento {
   id: string
@@ -41,13 +42,13 @@ export function VeiculosList() {
     try {
       setLoading(true)
       setError(null)
-      
+
       const res = await fetch("/api/veiculos")
-      
+
       if (!res.ok) {
         throw new Error("Erro ao carregar veículos")
       }
-      
+
       const data = await res.json()
       setVeiculos(data.data || [])
     } catch (err) {
@@ -81,8 +82,8 @@ export function VeiculosList() {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Carregando veículos...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+          <p className="text-gray-400">Carregando veículos...</p>
         </div>
       </div>
     )
@@ -90,13 +91,13 @@ export function VeiculosList() {
 
   if (error) {
     return (
-      <Card className="bg-red-50 border-red-200">
+      <Card variant="glass" className="border-red-500/30">
         <div className="text-center py-8">
-          <svg className="mx-auto h-12 w-12 text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <h3 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar veículos</h3>
-          <p className="text-red-600 mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-red-400 mb-2">Erro ao carregar veículos</h3>
+          <p className="text-gray-400 mb-4">{error}</p>
           <Button onClick={fetchVeiculos} variant="secondary">
             Tentar novamente
           </Button>
@@ -108,35 +109,32 @@ export function VeiculosList() {
   return (
     <>
       <div className="mb-6">
-        <Button onClick={() => setShowVeiculoModal(true)}>
-          <svg className="w-5 h-5 mr-2 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
+        <Button onClick={() => setShowVeiculoModal(true)} icon={<Plus className="h-4 w-4" />}>
           Cadastrar Novo Veículo
         </Button>
       </div>
 
       {veiculos.length === 0 ? (
-        <Card className="text-center py-12">
-          <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <Card variant="glass" className="text-center py-12">
+          <svg className="mx-auto h-16 w-16 text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6 0a1 1 0 001 1h2a1 1 0 001-1m-6 0h6" />
           </svg>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-white mb-2">
             Nenhum veículo cadastrado
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-400 mb-6">
             Cadastre seu primeiro cavalo mecânico para começar a receber ofertas de frete.
           </p>
-          <Button onClick={() => setShowVeiculoModal(true)}>
+          <Button onClick={() => setShowVeiculoModal(true)} icon={<Plus className="h-4 w-4" />}>
             Cadastrar Veículo
           </Button>
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {veiculos.map((veiculo) => (
-            <VeiculoCard 
-              key={veiculo.id} 
+            <VeiculoCard
+              key={veiculo.id}
               veiculo={veiculo}
               onAddImplemento={() => handleAddImplemento(veiculo.id)}
               onRefresh={fetchVeiculos}

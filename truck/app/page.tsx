@@ -6,7 +6,7 @@ import { Footer } from "@/components/landing/Footer"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       <HeroSection />
       <FeaturesSection />
@@ -14,4 +14,3 @@ export default function Home() {
     </div>
   )
 }
-

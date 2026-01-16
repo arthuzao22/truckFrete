@@ -31,24 +31,23 @@ export function DashboardNav() {
   const links = role === "MOTORISTA" ? motoristaLinks : contratanteLinks
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <Link href="/dashboard" className="text-xl font-bold text-blue-600">
+            <Link href="/dashboard" className="text-xl font-bold text-blue-400">
               FreteConnect
             </Link>
-            
-            <div className="hidden md:flex space-x-4">
+
+            <div className="hidden md:flex space-x-1">
               {links.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive(link.href)
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive(link.href)
+                      ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                      : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -57,12 +56,12 @@ export function DashboardNav() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               {session?.user?.name}
             </span>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="text-sm text-red-600 hover:text-red-700 font-medium"
+              className="text-sm text-red-400 hover:text-red-300 font-medium transition-colors"
             >
               Sair
             </button>

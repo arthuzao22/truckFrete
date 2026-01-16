@@ -1,4 +1,4 @@
-// FreteConnect 2.0 - Card Component
+// FreteConnect - Card Component (Dark Mode)
 "use client"
 
 import { forwardRef, HTMLAttributes } from "react"
@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "glass" | "premium" | "flat"
+  variant?: "default" | "glass" | "elevated" | "outlined"
   hover?: boolean
   padding?: "none" | "sm" | "md" | "lg"
 }
@@ -25,13 +25,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
   ) => {
     const variants = {
       default:
-        "bg-gray-800/50 border border-gray-700/50 backdrop-blur-sm",
+        "bg-gray-800/50 border border-white/10 backdrop-blur-sm",
       glass:
-        "bg-white/5 border border-white/10 backdrop-blur-xl",
-      premium:
-        "bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700/50 backdrop-blur-sm shadow-xl shadow-black/20",
-      flat:
-        "bg-gray-800 border border-gray-700",
+        "bg-gray-900/60 border border-white/10 backdrop-blur-xl",
+      elevated:
+        "bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-white/10 backdrop-blur-sm shadow-xl shadow-black/20",
+      outlined:
+        "bg-transparent border-2 border-white/20",
     }
 
     const paddings = {
@@ -47,15 +47,15 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       <Component
         ref={ref}
         className={cn(
-          "rounded-xl transition-all duration-300",
+          "rounded-xl transition-all duration-200",
           variants[variant],
           paddings[padding],
-          hover && "hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/30",
+          hover && "hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10 cursor-pointer",
           className
         )}
         {...(hover && {
-          whileHover: { scale: 1.02, y: -4 },
-          transition: { type: "spring", stiffness: 300, damping: 20 },
+          whileHover: { scale: 1.02, y: -2 },
+          transition: { type: "spring", stiffness: 400, damping: 25 },
         })}
         {...(props as React.ComponentProps<typeof motion.div>)}
       >
@@ -68,4 +68,3 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = "Card"
 
 export { Card }
-
