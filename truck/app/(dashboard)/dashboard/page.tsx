@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 
 export default async function DashboardPage() {
   const session = await auth()
-  
+
   if (!session?.user) {
     redirect("/login")
   }
@@ -15,18 +15,19 @@ export default async function DashboardPage() {
   const role = session.user.role
 
   let stats
-  
+
   if (role === "MOTORISTA") {
-    stats = await prisma.$transaction([
+    // Usando Promise.all em vez de $transaction (Driver Adapters não suportam transações com pooler)
+    stats = await Promise.all([
       prisma.veiculo.count({ where: { usuarioId: userId, ativo: true } }),
-      prisma.anuncioRetorno.count({ 
-        where: { 
+      prisma.anuncioRetorno.count({
+        where: {
           veiculo: { usuarioId: userId },
-          ativo: true 
-        } 
+          ativo: true
+        }
       }),
-      prisma.frete.count({ 
-        where: { 
+      prisma.frete.count({
+        where: {
           motoristaId: userId,
           status: { in: ["ACEITO", "EM_TRANSPORTE"] }
         }
@@ -67,20 +68,20 @@ export default async function DashboardPage() {
           <Card>
             <h3 className="text-xl font-bold mb-4">Ações Rápidas</h3>
             <div className="space-y-2">
-              <Link 
-                href="/veiculos?novo=true" 
+              <Link
+                href="/veiculos?novo=true"
                 className="block px-4 py-2 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
               >
                 ➕ Cadastrar novo veículo
               </Link>
-              <Link 
-                href="/retorno?novo=true" 
+              <Link
+                href="/retorno?novo=true"
                 className="block px-4 py-2 bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
               >
                 📢 Anunciar retorno disponível
               </Link>
-              <Link 
-                href="/fretes" 
+              <Link
+                href="/fretes"
                 className="block px-4 py-2 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition-colors"
               >
                 🔍 Buscar fretes disponíveis
@@ -104,11 +105,12 @@ export default async function DashboardPage() {
   }
 
   // CONTRATANTE
-  stats = await prisma.$transaction([
+  // Usando Promise.all em vez de $transaction (Driver Adapters não suportam transações com pooler)
+  stats = await Promise.all([
     prisma.frete.count({ where: { contratanteId: userId, status: "ABERTO" } }),
     prisma.frete.count({ where: { contratanteId: userId, status: "EM_TRANSPORTE" } }),
-    prisma.match.count({ 
-      where: { 
+    prisma.match.count({
+      where: {
         frete: { contratanteId: userId },
         status: "PENDENTE"
       }
@@ -149,20 +151,20 @@ export default async function DashboardPage() {
         <Card>
           <h3 className="text-xl font-bold mb-4">Ações Rápidas</h3>
           <div className="space-y-2">
-            <Link 
-              href="/fretes?novo=true" 
+            <Link
+              href="/fretes?novo=true"
               className="block px-4 py-2 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
             >
               ➕ Publicar novo frete
             </Link>
-            <Link 
-              href="/matches" 
+            <Link
+              href="/matches"
               className="block px-4 py-2 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition-colors"
             >
               🎯 Ver matches inteligentes
             </Link>
-            <Link 
-              href="/chat" 
+            <Link
+              href="/chat"
               className="block px-4 py-2 bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
             >
               💬 Negociar com motoristas

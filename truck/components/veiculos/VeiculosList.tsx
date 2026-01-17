@@ -41,13 +41,13 @@ export function VeiculosList() {
     try {
       setLoading(true)
       setError(null)
-      
+
       const res = await fetch("/api/veiculos")
-      
+
       if (!res.ok) {
         throw new Error("Erro ao carregar veículos")
       }
-      
+
       const data = await res.json()
       setVeiculos(data.data || [])
     } catch (err) {
@@ -135,8 +135,8 @@ export function VeiculosList() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {veiculos.map((veiculo) => (
-            <VeiculoCard 
-              key={veiculo.id} 
+            <VeiculoCard
+              key={veiculo.id}
               veiculo={veiculo}
               onAddImplemento={() => handleAddImplemento(veiculo.id)}
               onRefresh={fetchVeiculos}
@@ -145,23 +145,21 @@ export function VeiculosList() {
         </div>
       )}
 
-      {showVeiculoModal && (
-        <VeiculoFormModal
-          onClose={() => setShowVeiculoModal(false)}
-          onSuccess={handleVeiculoSuccess}
-        />
-      )}
+      <VeiculoFormModal
+        isOpen={showVeiculoModal}
+        onClose={() => setShowVeiculoModal(false)}
+        onSuccess={handleVeiculoSuccess}
+      />
 
-      {showImplementoModal && selectedVeiculoId && (
-        <ImplementoFormModal
-          veiculoId={selectedVeiculoId}
-          onClose={() => {
-            setShowImplementoModal(false)
-            setSelectedVeiculoId(null)
-          }}
-          onSuccess={handleImplementoSuccess}
-        />
-      )}
+      <ImplementoFormModal
+        isOpen={showImplementoModal && !!selectedVeiculoId}
+        veiculoId={selectedVeiculoId || ""}
+        onClose={() => {
+          setShowImplementoModal(false)
+          setSelectedVeiculoId(null)
+        }}
+        onSuccess={handleImplementoSuccess}
+      />
     </>
   )
 }

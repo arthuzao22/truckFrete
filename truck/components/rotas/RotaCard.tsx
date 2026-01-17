@@ -126,7 +126,7 @@ export function RotaCard({ rota }: RotaCardProps) {
           <div className="flex items-center gap-2 text-sm text-gray-700">
             <span>📦</span>
             <span>
-              {rota.capacidadeDisponivel === "TOTAL" 
+              {rota.capacidadeDisponivel === "TOTAL"
                 ? "Capacidade 100% disponível"
                 : `${rota.pesoDisponivel ? (rota.pesoDisponivel / 1000).toFixed(1) + "t" : "Parcial"} disponível`
               }
@@ -183,12 +183,11 @@ export function RotaCard({ rota }: RotaCardProps) {
       </div>
 
       {/* Details Modal */}
-      {showDetails && (
-        <RotaDetailsModal
-          rotaId={rota.id}
-          onClose={() => setShowDetails(false)}
-        />
-      )}
+      <RotaDetailsModal
+        isOpen={showDetails}
+        rotaId={rota.id}
+        onClose={() => setShowDetails(false)}
+      />
     </>
   )
 }

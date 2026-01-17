@@ -17,9 +17,10 @@ export async function GET(request: Request) {
     const dataSaidaMin = searchParams.get("dataSaidaMin")
     const dataSaidaMax = searchParams.get("dataSaidaMax")
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: Record<string, any> = { 
       ativo: true,
-      status: "ATIVO" // Apenas anúncios ativos
+      status: "ATIVO" as const // Usar enum correto
     }
 
     // Aplicar filtros com validação

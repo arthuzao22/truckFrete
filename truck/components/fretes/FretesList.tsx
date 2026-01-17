@@ -77,7 +77,7 @@ export function FretesList() {
         <Card>
           <div className="text-center py-12">
             <p className="text-gray-600 mb-4">
-              {role === "CONTRATANTE" 
+              {role === "CONTRATANTE"
                 ? "Você ainda não publicou nenhum frete"
                 : "Nenhum frete disponível no momento"}
             </p>
@@ -155,15 +155,14 @@ export function FretesList() {
         </div>
       )}
 
-      {showModal && (
-        <FreteFormModal
-          onClose={() => setShowModal(false)}
-          onSuccess={() => {
-            setShowModal(false)
-            loadFretes()
-          }}
-        />
-      )}
+      <FreteFormModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={() => {
+          setShowModal(false)
+          loadFretes()
+        }}
+      />
     </div>
   )
 }

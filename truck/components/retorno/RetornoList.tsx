@@ -154,11 +154,10 @@ export function RetornoList() {
             <button
               key={status}
               onClick={() => setFiltroStatus(status)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                filtroStatus === status 
-                  ? 'bg-blue-600 text-white' 
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filtroStatus === status
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+                }`}
             >
               {status === "TODOS" ? "Todos" : status} ({count})
             </button>
@@ -206,15 +205,14 @@ export function RetornoList() {
       )}
 
       {/* Modal de Criar Anúncio */}
-      {showModal && (
-        <RetornoFormModal
-          onClose={() => setShowModal(false)}
-          onSuccess={() => {
-            setShowModal(false)
-            loadAnuncios()
-          }}
-        />
-      )}
+      <RetornoFormModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={() => {
+          setShowModal(false)
+          loadAnuncios()
+        }}
+      />
 
       {/* Modal de Interessados */}
       {anuncioSelecionado && (

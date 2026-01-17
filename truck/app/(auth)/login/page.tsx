@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/Card"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const registered = searchParams.get("registered")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -36,7 +38,7 @@ export default function LoginPage() {
         router.refresh()
       }
     } catch {
-      setError("Erro ao fazer login")
+      setError("Erro ao fazer login. Verifique sua conexão.")
     } finally {
       setLoading(false)
     }
@@ -51,7 +53,13 @@ export default function LoginPage() {
         </div>
 
         <Card>
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">Login</h2>
+
+          {registered && (
+            <div className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+              ✅ Conta criada com sucesso! Faça login para continuar.
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">

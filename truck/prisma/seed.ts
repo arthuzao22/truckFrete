@@ -243,7 +243,7 @@ async function main() {
     const implemento4 = implementos.find(i => i.placa === 'IMP-0004')
 
     if (!implemento1 || !implemento2 || !implemento3 || !implemento4) {
-      throw new Error('Implementos não encontrados após criação')
+        throw new Error('Implementos não encontrados após criação')
     }
 
     // =============================
@@ -301,13 +301,133 @@ async function main() {
             destinoLng: -48.548,
             dataSaida: new Date('2026-01-18'),
             raioOperacao: 80,
-            motoristaId: motorista2.id,
-            veiculoId: veiculo3.id,
+            motoristaId: motorista1.id,
+            veiculoId: veiculo4.id,
             implementoId: implemento3.id
         },
     })
 
-    console.log(`✅ ${3} anúncios de retorno criados`)
+    // Anúncios adicionais para ter mais dados variados
+    await prisma.anuncioRetorno.create({
+        data: {
+            origemCidade: 'Porto Alegre',
+            origemUf: 'RS',
+            origemLat: -30.0346,
+            origemLng: -51.2177,
+            destinoCidade: 'São Paulo',
+            destinoUf: 'SP',
+            destinoLat: -23.5505,
+            destinoLng: -46.6333,
+            dataSaida: new Date('2026-01-25'),
+            raioOperacao: 200,
+            capacidadeDisponivel: 'TOTAL',
+            pesoDisponivel: 28000,
+            volumeDisponivel: 90,
+            tiposCargaAceita: ['Eletrônicos', 'Alimentos', 'Móveis'],
+            precoSugerido: 5500,
+            precoNegociavel: true,
+            observacoes: 'Caminhão com rastreamento, experiência com cargas frágeis',
+            motoristaId: motorista1.id,
+            veiculoId: veiculo1.id,
+            implementoId: implemento1.id
+        },
+    })
+
+    await prisma.anuncioRetorno.create({
+        data: {
+            origemCidade: 'Salvador',
+            origemUf: 'BA',
+            origemLat: -12.9714,
+            origemLng: -38.5014,
+            destinoCidade: 'Recife',
+            destinoUf: 'PE',
+            destinoLat: -8.0476,
+            destinoLng: -34.877,
+            dataSaida: new Date('2026-01-23'),
+            raioOperacao: 150,
+            capacidadeDisponivel: 'PARCIAL',
+            pesoDisponivel: 20000,
+            tiposCargaAceita: ['Grãos', 'Insumos Agrícolas'],
+            precoSugerido: 3800,
+            precoNegociavel: false,
+            motoristaId: motorista2.id,
+            veiculoId: veiculo2.id,
+            implementoId: implemento2.id
+        },
+    })
+
+    await prisma.anuncioRetorno.create({
+        data: {
+            origemCidade: 'Manaus',
+            origemUf: 'AM',
+            origemLat: -3.119,
+            origemLng: -60.0217,
+            destinoCidade: 'Belém',
+            destinoUf: 'PA',
+            destinoLat: -1.4558,
+            destinoLng: -48.4902,
+            dataSaida: new Date('2026-01-28'),
+            dataChegadaEstimada: new Date('2026-01-30'),
+            flexibilidadeDias: 3,
+            capacidadeDisponivel: 'TOTAL',
+            pesoDisponivel: 45000,
+            tiposCargaAceita: ['Container', 'Carga Geral'],
+            precoSugerido: 12000,
+            precoNegociavel: true,
+            observacoes: 'Rota pela BR-319, preço inclui balsa',
+            motoristaId: motorista1.id,
+            veiculoId: veiculo1.id,
+            implementoId: implemento4.id
+        },
+    })
+
+    await prisma.anuncioRetorno.create({
+        data: {
+            origemCidade: 'Goiânia',
+            origemUf: 'GO',
+            origemLat: -16.6869,
+            origemLng: -49.2648,
+            destinoCidade: 'Uberlândia',
+            destinoUf: 'MG',
+            destinoLat: -18.9186,
+            destinoLng: -48.2772,
+            dataSaida: new Date('2026-01-19'),
+            raioOperacao: 100,
+            capacidadeDisponivel: 'TOTAL',
+            tiposCargaAceita: ['Máquinas', 'Equipamentos Pesados'],
+            precoNegociavel: true,
+            motoristaId: motorista1.id,
+            veiculoId: veiculo4.id,
+            implementoId: implemento3.id
+        },
+    })
+
+    await prisma.anuncioRetorno.create({
+        data: {
+            origemCidade: 'Vitória',
+            origemUf: 'ES',
+            origemLat: -20.3155,
+            origemLng: -40.3128,
+            destinoCidade: 'Rio de Janeiro',
+            destinoUf: 'RJ',
+            destinoLat: -22.9068,
+            destinoLng: -43.1729,
+            dataSaida: new Date('2026-01-21'),
+            flexibilidadeDias: 2,
+            capacidadeDisponivel: 'PARCIAL',
+            pesoDisponivel: 15000,
+            volumeDisponivel: 50,
+            tiposCargaAceita: ['Bebidas', 'Alimentos', 'Carga Geral'],
+            precoSugerido: 2200,
+            precoNegociavel: true,
+            observacoes: 'Disponível para coleta no porto de Vitória',
+            motoristaId: motorista2.id,
+            veiculoId: veiculo2.id,
+            implementoId: implemento2.id
+        },
+    })
+
+    console.log(`✅ ${8} anúncios de retorno criados`)
 
     // =============================
     // CRIAR FRETES
@@ -539,7 +659,7 @@ async function main() {
     console.log('   - 6 usuários (3 motoristas, 2 contratantes, 1 admin)')
     console.log('   - 4 veículos')
     console.log('   - 4 implementos')
-    console.log('   - 3 anúncios de retorno')
+    console.log('   - 8 anúncios de retorno')
     console.log('   - 5 fretes')
     console.log('   - 3 matches')
     console.log('   - 5 mensagens')

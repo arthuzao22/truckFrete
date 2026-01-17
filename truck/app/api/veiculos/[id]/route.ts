@@ -31,7 +31,8 @@ export async function DELETE(
     }
 
     // Soft delete - marca como inativo o veículo e seus implementos
-    await prisma.$transaction([
+    // Usando Promise.all em vez de $transaction (Driver Adapters não suportam transações com pooler)
+    await Promise.all([
       prisma.implemento.updateMany({
         where: { veiculoId: id },
         data: { ativo: false }

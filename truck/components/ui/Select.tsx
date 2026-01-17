@@ -15,7 +15,7 @@ export function Select({ label, error, options, children, className = '', ...pro
         </label>
       )}
       <select 
-        className={`input-field ${error ? 'border-red-500' : ''} ${className}`}
+        className={`select-field ${error ? 'border-red-500' : ''} ${className}`}
         {...props}
       >
         {options ? (
